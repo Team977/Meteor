@@ -19,7 +19,7 @@ public class ArmMove extends Command {
     // eg. requires(chassis);
     requires(Robot.robotArm);
     targetPos = position;
-    setTimeout(3);
+    setTimeout(4);
   }
 
   // Called just before this Command runs the first time
@@ -36,7 +36,7 @@ public class ArmMove extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return isTimedOut();
+    return isTimedOut() || (Robot.robotArm.getError()<10);
     //return (Robot.robotArm.getError() < 10);
   }
 

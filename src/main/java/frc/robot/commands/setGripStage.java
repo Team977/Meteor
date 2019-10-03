@@ -9,19 +9,24 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.RobotMap.GripStage;
 
-public class GripNextAction extends Command {
-  public GripNextAction() {
+public class setGripStage extends Command {
+
+  private GripStage stage;
+
+  public setGripStage(GripStage stage) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.robotGrip);
+    this.stage = stage;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.robotGrip.closeCargoArms();
-    Robot.robotGrip.grabTop();
+    Robot.robotGrip.setStage(this.stage);
+    Robot.robotGrip.updateSolenoids();
   }
 
   // Called repeatedly when this Command is scheduled to run

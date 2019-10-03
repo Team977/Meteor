@@ -24,8 +24,11 @@ public class RobotMap {
   }
   
   public enum ArmPositions {
-    start, loadCargo, lowCargo, midCargo, highCargo,loadHatch, lowHatch, midHatch, highHatch;
+    start, loadCargo, lowCargo, midCargo, highCargo, loadHatch, lowHatch, midHatch, highHatch;
   }
 
+  public enum GripStage {
+    hatchStart, hatchGrab, hatchRelease, cargoStart, cargoGrab, cargoRelease, cargoDunk, defense
+  }
 
 }

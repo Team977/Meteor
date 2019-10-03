@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.RobotMap.GripStage;
 
 public class AutoHatchPickup extends Command {
   public AutoHatchPickup() {
@@ -36,7 +37,8 @@ public class AutoHatchPickup extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.robotGrip.openHatch();
+    Robot.robotGrip.setStage(GripStage.hatchGrab);
+    Robot.robotGrip.updateSolenoids();
   }
 
   // Called when another command which requires one or more of the same

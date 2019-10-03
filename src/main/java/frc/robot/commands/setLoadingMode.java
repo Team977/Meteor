@@ -9,18 +9,23 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.RobotMap.LoadingMode;
 
-public class DeployNoodles extends Command {
-  public DeployNoodles() {
+public class setLoadingMode extends Command {
+
+  private LoadingMode mode;
+
+  public setLoadingMode(LoadingMode mode) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.robotGrip);
+    this.mode = mode;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.robotGrip.deployNoodles();
+    Robot.robotGrip.setMode(this.mode);
   }
 
   // Called repeatedly when this Command is scheduled to run

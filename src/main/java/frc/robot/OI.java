@@ -9,20 +9,25 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.commands.CancelClimb;
+import frc.robot.RobotMap.GripStage;
+import frc.robot.commands.CargoButtonPressed;
+import frc.robot.commands.ClimbDown;
+import frc.robot.commands.ClimbDriveUp;
 import frc.robot.commands.ClimbUp;
-import frc.robot.commands.EngageCargoMode;
-import frc.robot.commands.EngageHatchMode;
 import frc.robot.commands.GoHigh;
 import frc.robot.commands.GoLow;
 import frc.robot.commands.GoMid;
-import frc.robot.commands.GripNextAction;
-import frc.robot.commands.NewGripNextAction;
+import frc.robot.commands.GripButtonPressed;
+import frc.robot.commands.HatchButtonPressed;
 import frc.robot.commands.RetractClimb;
+import frc.robot.commands.RetractClimb2;
 import frc.robot.commands.SetDefenseMode;
 import frc.robot.commands.StopClimb;
+import frc.robot.commands.StopClimbDrive;
 import frc.robot.commands.setDriveDirection;
+import frc.robot.commands.setGripStage;
 import frc.robot.commands.setPrecisionMode;
+import frc.robot.commands.stopArm;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -58,30 +63,30 @@ public class OI {
     DriverL1.whenReleased(new setPrecisionMode(false));
     DriverR1.whenPressed(new setDriveDirection(RobotMap.DriveDirection.reverse));
     DriverR1.whenReleased(new setDriveDirection(RobotMap.DriveDirection.forward));
-/*
-    DriverX.whenPressed(new CancelClimb());                    
-    DriverX.whenReleased(new StopClimb());
-    DriverA.whenPressed(new ClimbUp());
+   
+    DriverStart.whileHeld(new ClimbUp());
+    DriverStart.whenReleased(new StopClimb());
+    DriverX.whileHeld(new ClimbDriveUp());
+    DriverX.whenReleased(new StopClimbDrive());
+    DriverA.whileHeld(new RetractClimb());
     DriverA.whenReleased(new StopClimb());
-    DriverB.whenPressed(new RetractClimb());    
-    DriverB.whenReleased(new StopClimb());
-*/
-    DriverX.whileHeld(new CancelClimb());
-    DriverX.whenReleased(new StopClimb());
-    DriverA.whileHeld(new ClimbUp());
-    DriverA.whenReleased(new StopClimb());
-    DriverB.whileHeld(new RetractClimb());    
+    DriverB.whileHeld(new RetractClimb2());    
     DriverB.whenReleased(new StopClimb());
 
+    DriverSelect.whileHeld(new ClimbDown());
+    DriverSelect.whenReleased(new StopClimb());
 
-    inButton.whenPressed(new GripNextAction());
 
-    hatchButton.whenPressed(new EngageHatchMode());
-    cargoButton.whenPressed(new EngageCargoMode());
-    gripButton.whenPressed(new NewGripNextAction());
+    inButton.whenPressed(new setGripStage(GripStage.cargoDunk));
+
+    hatchButton.whenPressed(new HatchButtonPressed());
+    cargoButton.whenPressed(new CargoButtonPressed());
+    gripButton.whenPressed(new GripButtonPressed());
     lowButton.whenPressed(new GoLow());
     midButton.whenPressed(new GoMid());
     hiButton.whenPressed(new GoHigh());
+
+    overButton.whenPressed(new stopArm());
 
     //lowButton.whenPressed(new ArmMove(RobotMap.ArmPositions.start));
     //midButton.whenPressed(new ArmMove(RobotMap.ArmPositions.midCargo));

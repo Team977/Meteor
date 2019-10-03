@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
 import frc.robot.commands.StopClimb;
@@ -19,6 +20,7 @@ public class Climber extends Subsystem {
 
 
 private Spark frClimb, rrClimb, flClimb, rlClimb;
+private VictorSP climbDriveR, climbDriveL;
 private double upPower = 0.4;
 private double downPower = -0.3;
 private double kRollAdj = .05;
@@ -31,31 +33,49 @@ private double kPitchAdj =  .05;
     flClimb = new Spark(2);
     rlClimb = new Spark(3);
     
+    climbDriveR = new VictorSP(4);
+    climbDriveL = new VictorSP(5);
+
     frClimb.setInverted(true);
     rrClimb.setInverted(true);
     flClimb.setInverted(true);
     rlClimb.setInverted(false);
 
   }
-  public void climbUp(){
+  public void liftUp(){
     frClimb.set(upPower - kPitchAdj*Robot.robotAccel.getPitchAngle());
     rrClimb.set(upPower);
     flClimb.set(upPower - kPitchAdj*Robot.robotAccel.getPitchAngle() - kRollAdj*Robot.robotAccel.getRollAngle());
     rlClimb.set(upPower - kRollAdj*Robot.robotAccel.getRollAngle());
   } 
 
-  public void climbDownAll(){
+  public void lowerDown(){
     frClimb.set(downPower);
     rrClimb.set(downPower);
     flClimb.set(downPower);
     rlClimb.set(downPower);
   }
 
-  public void climbDown(){
+  public void retractFront(){
     rrClimb.set(downPower);
     rlClimb.set(downPower);
   }
   
+  public void retractBack(){
+    rrClimb.set(downPower);
+    rlClimb.set(downPower);
+  }
+
+  public void driveClimb(){
+    climbDriveR.set(1);
+    climbDriveL.set(1);
+  }
+
+  public void stopDriveClimb(){
+    climbDriveR.set(0);
+    climbDriveL.set(0);
+  }
+
   public void stop(){
     frClimb.set(0);
     rrClimb.set(0);

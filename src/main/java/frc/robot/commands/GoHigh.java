@@ -24,7 +24,6 @@ public class GoHigh extends CommandGroup {
       addSequential(new ArmMove(ArmPositions.highCargo));
     }
 
-    //addSequential(new RetractNoodles());
-
+   
   }
 }

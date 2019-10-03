@@ -9,16 +9,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.RobotMap.ArmPositions;
+import frc.robot.RobotMap.GripStage;
 import frc.robot.RobotMap.LoadingMode;
 
-public class EngageCargoMode extends CommandGroup {
+public class HatchButtonPressed extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public EngageCargoMode() {
+  public HatchButtonPressed() {
 
-    addParallel(new ArmMove(ArmPositions.loadCargo));
-    addSequential(new setGripMode(LoadingMode.cargo));
+    addParallel(new setGripStage(GripStage.hatchStart));
+    addSequential(new setLoadingMode(LoadingMode.hatch));
+    addSequential(new ArmMove(ArmPositions.lowHatch));
+    addSequential(new AutoHatchPickup());
 
   }
 }

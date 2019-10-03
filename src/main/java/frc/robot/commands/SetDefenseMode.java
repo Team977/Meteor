@@ -9,15 +9,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.RobotMap.ArmPositions;
-import frc.robot.RobotMap.LoadingMode;
+import frc.robot.RobotMap.GripStage;
 
 public class SetDefenseMode extends CommandGroup {
   /**
    * Add your docs here.
    */
   public SetDefenseMode() {
-    addSequential(new setGripMode(LoadingMode.cargo));
-    addSequential(new RetractNoodles());
+    addSequential(new setGripStage(GripStage.defense));
     addSequential(new ArmMove(ArmPositions.start));
   }
 }

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.RobotMap.GripStage;
 import frc.robot.RobotMap.LoadingMode;
 
 /**
@@ -21,10 +22,11 @@ public class Grip extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private Solenoid hatch;
-  private Solenoid cargo;
+  private Solenoid cargoArms;
   private Solenoid noodleArms;
   private DoubleSolenoid cargoTop;
   private LoadingMode mode = LoadingMode.hatch;
+  private GripStage stage = GripStage.hatchGrab;
   private DigitalInput hatchBumper;
  
  
@@ -32,7 +34,7 @@ public class Grip extends Subsystem {
   public Grip(){
     super();
     hatch = new Solenoid(6);
-    cargo = new Solenoid(5);
+    cargoArms = new Solenoid(5);
     cargoTop = new DoubleSolenoid(2,3);
     hatchBumper = new DigitalInput(0);
     noodleArms = new Solenoid(4);
@@ -40,32 +42,44 @@ public class Grip extends Subsystem {
 
   }
 
-public void grabTop(){
-  cargoTop.set(Value.kForward);
-}
-
-public void releaseTop(){
-  cargoTop.set(Value.kReverse);
-}
-
+  public void grabTop(){
+    cargoTop.set(Value.kForward);
+  }
+  public void releaseTop(){
+    cargoTop.set(Value.kReverse);
+  }
   public void deployNoodles(){
     noodleArms.set(true);
   }
-  
   public void retractNoodles(){
     noodleArms.set(false);
   }
+  public void openHatch(){
+    hatch.set(false);
+  }
+  public void closeHatch(){
+    hatch.set(true);
+  }
+  public void openCargoArms(){
+    cargoArms.set(false);
+  }
+  public void closeCargoArms(){ 
+    cargoArms.set(true);
+  }
+  
+  
   public boolean getCargoState(){
-    return cargo.get();
+    return cargoArms.get();
   }
   public boolean getHatchState(){
     return hatch.get();
   }
-  
   public LoadingMode getMode(){
     return this.mode;
   }
-
+  public GripStage getStage(){
+    return this.stage;
+  }
   public boolean getHatchBumper(){
     return !hatchBumper.get();
   }
@@ -73,63 +87,66 @@ public void releaseTop(){
 
   public void setMode(LoadingMode mode){
     this.mode = mode;
-
-    if (mode == LoadingMode.cargo){
-      //starting state for cargo
-      openCargoArms();
-      openHatch();
-      deployNoodles();
-    }
-    else if (mode == LoadingMode.hatch){
-      //starting state for hatch
-      openCargoArms();
-      closeHatch();
-      retractNoodles();
-    }
   }
-//this should not be used, use NewGripNextAction instead
-  public void nextAction(){
-    //cycles to next action depending on current state of solenoids & loading mode
-    if (mode == LoadingMode.cargo){
-      if(cargo.get()){
+
+  public void setStage(GripStage stage){
+    this.stage = stage;
+  }
+ 
+  public void updateSolenoids(){
+    switch(this.stage){
+      case hatchStart:
         closeHatch();
-        //need a pause in here, somehow...
         openCargoArms();
         retractNoodles();
-      }
-      else {
-        closeCargoArms();
+        releaseTop();
+        break;
+      case hatchGrab:
         openHatch();
-      }
-    }
-    else if (mode == LoadingMode.hatch){
-      if(hatch.get()){
-        openHatch();
-      }
-      else{
-        closeHatch();
-        deployNoodles();
-        //need a pause here too
+        openCargoArms();
         retractNoodles();
-      }
+        releaseTop();
+        break;
+      case hatchRelease:
+        closeHatch();
+        openCargoArms();
+        deployNoodles();
+        releaseTop();
+        break;
+      case cargoStart:
+        openHatch();
+        openCargoArms();
+        deployNoodles();
+        releaseTop();
+        break;
+      case cargoGrab:
+        openHatch();
+        closeCargoArms();
+        deployNoodles();
+        grabTop();
+        break;
+      case cargoRelease:
+        closeHatch();
+        openCargoArms();
+        deployNoodles();
+        releaseTop();
+        break;
+      case cargoDunk:
+        closeHatch();
+        openCargoArms();
+        retractNoodles();
+        grabTop();
+        break;
+      case defense:
+        openHatch();
+        openCargoArms();
+        retractNoodles();
+        releaseTop();
+        break;
+
     }
   }
 
-  public void openHatch(){
-    hatch.set(false);
-  }
-
-  public void closeHatch(){
-    hatch.set(true);
-  }
-
-  public void openCargoArms(){
-    cargo.set(false);
-  }
-
-  public void closeCargoArms(){ 
-    cargo.set(true);
-  }
 
   @Override
   public void initDefaultCommand() {

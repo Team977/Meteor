@@ -104,16 +104,6 @@ public class Arm extends Subsystem {
 
     armTalon.set(ControlMode.PercentOutput, speed*0.5);
 
-    /*if ((speed > 0) && (topLimit.get())){
-      
-    armTalon.set(ControlMode.PercentOutput, speed*0.5);
-    }
-    else if  ((speed < 0) && (bottomLimit.get())){
-      armTalon.set(ControlMode.PercentOutput, speed*0.5);
-    }
-    else{
-      armTalon.set(ControlMode.PercentOutput, 0);
-    }*/
   }
 
   @Override

@@ -9,35 +9,65 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.RobotMap.GripStage;
 
-public class CancelClimb extends Command {
-  public CancelClimb() {
+public class GripButtonPressed extends Command {
+  public GripButtonPressed() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.robotClimber);
+    requires(Robot.robotGrip);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+
+    GripStage stage = Robot.robotGrip.getStage();
+
+    switch(stage){
+      case defense:
+        break;
+      case hatchStart:
+        Robot.robotGrip.setStage(GripStage.hatchGrab);
+        break;
+      case hatchGrab:
+        Robot.robotGrip.setStage(GripStage.hatchRelease);
+        break;
+      case hatchRelease:
+        Robot.robotGrip.setStage(GripStage.hatchGrab);
+        break;
+      case cargoStart:
+        Robot.robotGrip.setStage(GripStage.cargoGrab);
+        break;
+      case cargoGrab:
+        Robot.robotGrip.setStage(GripStage.cargoRelease);
+        break;
+      case cargoRelease:
+        Robot.robotGrip.setStage(GripStage.cargoGrab);
+        break;
+      case cargoDunk:
+        Robot.robotGrip.setStage(GripStage.defense);
+        break;
+    }
+
+    Robot.robotGrip.updateSolenoids();
+
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.robotClimber.climbDownAll();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return true;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.robotClimber.stop();
   }
 
   // Called when another command which requires one or more of the same

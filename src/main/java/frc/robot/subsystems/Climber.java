@@ -56,6 +56,10 @@ private double kPitchAdj =  .05;
     rlClimb.set(downPower);
   }
   
+  public void frontUp(){
+    frClimb.set(upPower);
+    flClimb.set(upPower);
+  }
   public void stop(){
     frClimb.set(0);
     rrClimb.set(0);
